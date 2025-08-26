@@ -1,25 +1,73 @@
 body {
     margin: 0;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0f172a;
-    /* dark navy */
+    background: #0f172a; /* dark navy */
     color: white;
     font-family: "Poppins", sans-serif;
+    padding: 10px;
 }
 
 .container {
     text-align: center;
+    max-width: 95%;
 }
 
+/* Title */
 h1 {
     font-size: 2.2rem;
     margin-bottom: 20px;
     color: #f9fafb;
 }
 
+/* Logo + Title Container */
+.header {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* Logo Styling */
+.logo {
+    width: 250px;
+    max-width: 90%;
+    height: auto;
+    margin-bottom: 10px;
+    animation: fadeIn 1.5s ease-in-out, bounce 2s infinite alternate;
+}
+
+/* Title */
+.header h1 {
+    font-size: 2.2rem;
+    color: #ff4d6d;
+    text-shadow: 2px 2px 8px rgba(255, 0, 76, 0.3);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Logo Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-8px);
+    }
+}
+
+/* Button */
 #startBtn {
     position: relative;
     background: linear-gradient(90deg, #ef4444, #ec4899);
@@ -63,7 +111,7 @@ h1 {
     height: 100px;
 }
 
-/* Mic circle (center) */
+/* Mic circle */
 .mic-circle {
     width: 30px;
     height: 30px;
@@ -87,34 +135,13 @@ h1 {
     animation: pulseWave 2s infinite;
 }
 
-.wave1 {
-    width: 50px;
-    height: 50px;
-    animation-delay: 0s;
-}
-
-.wave2 {
-    width: 70px;
-    height: 70px;
-    animation-delay: 0.4s;
-}
-
-.wave3 {
-    width: 90px;
-    height: 90px;
-    animation-delay: 0.8s;
-}
+.wave1 { width: 50px; height: 50px; animation-delay: 0s; }
+.wave2 { width: 70px; height: 70px; animation-delay: 0.4s; }
+.wave3 { width: 90px; height: 90px; animation-delay: 0.8s; }
 
 @keyframes pulseWave {
-    0% {
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0.6;
-    }
-
-    100% {
-        transform: translate(-50%, -50%) scale(1.4);
-        opacity: 0;
-    }
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; }
 }
 
 /* Speaking animation: glowing pulse */
@@ -128,7 +155,6 @@ h1 {
         box-shadow: 0 0 15px #f43f5e;
         background: #f43f5e;
     }
-
     100% {
         transform: scale(1.2);
         box-shadow: 0 0 25px #22d3ee;
@@ -136,9 +162,7 @@ h1 {
     }
 }
 
-.hidden {
-    display: none;
-}
+.hidden { display: none; }
 
 #expression {
     margin-top: 20px;
@@ -155,25 +179,31 @@ h1 {
     animation: pulse 1.5s infinite;
 }
 
-/* Extra animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }
 
-@keyframes pulse {
+/*  Responsive Design */
+@media (max-width: 1024px) {
+    .logo { width: 250px; }
+    .header h1 { font-size: 2rem; }
+}
 
-    0%,
-    100% {
-        opacity: 1;
-    }
+@media (max-width: 768px) {
+    .logo { width: 180px; }
+    .header h1 { font-size: 1.8rem; }
+    #startBtn { padding: 12px 28px; font-size: 0.9rem; }
+    #expression { font-size: 1rem; }
+    #result { font-size: 1.6rem; }
+}
 
-    50% {
-        opacity: 0.6;
-    }
+@media (max-width: 480px) {
+    .logo { width: 140px; }
+    .header h1 { font-size: 1.5rem; }
+    #startBtn { padding: 10px 22px; font-size: 0.85rem; border-radius: 15px; }
+    #mic-indicator { width: 70px; height: 70px; }
+    .mic-circle { width: 20px; height: 20px; }
+    #expression { font-size: 0.9rem; }
+    #result { font-size: 1.4rem; }
 }

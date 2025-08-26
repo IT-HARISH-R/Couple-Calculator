@@ -12,7 +12,7 @@ startBtn.addEventListener("click", () => {
     recognition.lang = "ta-IN"; // Tamil + English recognition
     recognition.start();
 
-    console.log("🎤 Listening...");
+    console.log(" Listening...");
 
     // Switch to listening animation
     btnText.style.opacity = "0";
@@ -21,7 +21,7 @@ startBtn.addEventListener("click", () => {
     micIndicator.classList.add("listening"); // waves active
 
     recognition.onend = () => {
-        console.log("🛑 Stopped listening");
+        console.log(" Stopped listening");
         btnText.style.opacity = "1";
         listeningText.style.opacity = "0";
         // If not speaking, hide
@@ -32,7 +32,7 @@ startBtn.addEventListener("click", () => {
 
     recognition.onresult = (event) => {
         let voiceText = event.results[0][0].transcript.toLowerCase();
-        console.log("🎤 Voice Input:", voiceText);
+        console.log(" Voice Input:", voiceText);
 
         // Clean filler words
         voiceText = voiceText
@@ -58,7 +58,7 @@ startBtn.addEventListener("click", () => {
                 const ans = eval(exp);
                 resultEl.textContent = `Result: ${ans}`;
 
-                // 🔊 Switch to speaking animation
+                //  Switch to speaking animation
                 micIndicator.classList.remove("listening");
                 micIndicator.classList.add("speaking");
 
@@ -69,17 +69,17 @@ startBtn.addEventListener("click", () => {
                 synth.speak(utter);
 
                 utter.onend = () => {
-                    console.log("✅ Finished speaking");
+                    console.log(" Finished speaking");
                     micIndicator.classList.remove("speaking");
                     micIndicator.classList.add("hidden"); // hide after speaking
                 };
             } else {
-                console.warn("❌ Invalid string detected...");
-                resultEl.textContent = "❌ Invalid Expression";
+                console.warn(" Invalid string detected...");
+                resultEl.textContent = " Invalid Expression";
             }
         } catch (error) {
-            console.error("⚠️ Error evaluating:", error);
-            resultEl.textContent = "⚠️ Error in calculation";
+            console.error(" Error evaluating:", error);
+            resultEl.textContent = " Error in calculation";
         }
     };
 });
