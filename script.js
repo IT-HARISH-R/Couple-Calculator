@@ -41,14 +41,23 @@ startBtn.addEventListener("click", () => {
 
         // Convert to math expression
         let exp = voiceText
-            .replace(/plus|add|addition/gi, "+")
-            .replace(/minus|subtract|subtraction|less/gi, "-")
-            .replace(/times|into|multiply|multiplication|product/gi, "*")
-            .replace(/divide|by|division|over/gi, "/")
-            .replace(/கூட்டு|கூட்டல்|சேர்த்து|பிளஸ்|ஆட்|சம்மேச்சு/gi, "+")
-            .replace(/கழி|கழித்தல்|மைனஸ்|குறைத்தல்|கம்மி|கழிச்சு/gi, "-")
-            .replace(/பெருக்கு|மடக்கு|இன்டு|மடங்காக|ப்ராடக்ட்|பெருக்கல்/gi, "*")
-            .replace(/வகுத்து|வகுத்தல்|வகுக்க|டிவைடட்|பங்கிட்டு|பகுத்தல்/gi, "/");
+            // English + symbols
+            .replace(/\b(plus|add|addition|sum|increase|increment|and)\b/gi, "+")
+            .replace(/\b(minus|subtract|subtraction|less|deduct|decrease|reduce|difference|take away)\b/gi, "-")
+            .replace(/\b(times|into|multiply|multiplication|product|multiplied by|x)\b/gi, "*")
+            .replace(/\b(divide|by|division|over|divided by|quotient|per)\b/gi, "/")
+
+            // Tamil + synonyms
+            .replace(/(கூட்டு|கூட்டல்|சேர்த்து|பிளஸ்|பளஸ்|ஆட்|சம்மேச்சு|மேலும்|இணை)/gi, "+")
+            .replace(/(கழி|கழித்தல்|மைனஸ்|குறைத்தல்|கம்மி|கழிச்சு|குறை|வெறுமை)/gi, "-")
+            .replace(/(பெருக்கு|மடக்கு|இன்டு|மடங்காக|ப்ராடக்ட்|பெருக்கல்|எதிரொலி|x)/gi, "*")
+            .replace(/(வகுத்து|வகுத்தல்|வகுக்க|டிவைடட்|டிவைட் பை|டிவைடட் பை|பங்கிட்டு|பகுத்தல்|பிரித்தல்|பிரித்து|பங்கிடு)/gi, "/")
+
+            // Extra human-friendly replacements
+            .replace(/\bequal to|is equal to|answer|result|என்பது|சமம்|விடை/gi, "=")
+            .replace(/\band\b/gi, "+")  // sometimes people say "two and three"
+            .replace(/×/g, "*")         // symbol support
+            .replace(/÷/g, "/");        // symbol support
 
         expressionEl.textContent = `Expression ${exp}`;
 
@@ -64,7 +73,7 @@ startBtn.addEventListener("click", () => {
 
                 // Speak result
                 const synth = window.speechSynthesis;
-                const utter = new SpeechSynthesisUtterance(`The answer is ${ans}`);
+                const utter = new SpeechSynthesisUtterance(` ${ans}`);
                 utter.lang = "ta-IN";
                 synth.speak(utter);
 
