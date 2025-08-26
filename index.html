@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ta">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Couples Calculator</title>
+    <link rel="icon" type="image/png" href="./logo.png">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Couples Calculator</h1>
+
+    <button id="startBtn">
+      <span class="btn-text">Start Calculator</span>
+      <span class="listening-text">🎤 Listening...</span>
+    </button>
+
+    <!-- Mic animation -->
+    <div id="mic-indicator" class="hidden">
+      <div class="mic-circle"></div>
+      <div class="mic-wave wave1"></div>
+      <div class="mic-wave wave2"></div>
+      <div class="mic-wave wave3"></div>
+    </div>
+
+    <p id="expression"></p>
+    <p id="result"></p>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+
+</html>
