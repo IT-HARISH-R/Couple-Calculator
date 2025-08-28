@@ -27,7 +27,7 @@ const numberMap = {
 
   "ஏழு": "7", "எழு": "7", "செவன்": "7", "seven": "7",
 
-  "எட்டு": "8", "எட்டு": "8", "ஏய்ட்": "8", "eight": "8",
+  "எட்டு": "8", "எட்டு": "8", "எய்ட்": "8", "ஏய்ட்": "8", "eight": "8",
 
   "ஒன்பது": "9", "ஒம்பது": "9", "1பது": "9", "1 பது": "9", "நைன்": "9", "nine": "9",
 
@@ -80,7 +80,7 @@ function convertToMathExpression(text) {
     .replace(/கூட்டு|கூட்டல்|சேர்த்து|ப்ளஸ்|பிளஸ்|ஆட்|சம்மேச்சு/gi, "+")
     .replace(/கழி|கழித்தல்|மைனஸ்|குறைத்தல்|கம்மி|கழிச்சு/gi, "-")
     .replace(/பெருக்கு|மடக்கு|இன்டு|மடங்காக|பெருக்கல்|டைம்ஸ்|மல்டிபிள்/gi, "*")
-    .replace(/வகுத்து|வகுத்தல்|வகுக்க|பகுத்தல்|டிவைடு|டிவைடட்|டிவைடர்|டிவைட்|பை/gi, "/");
+    .replace(/வகுத்து|வகுத்தல்|வகுக்க|பகுத்தல்|டிவைடட் பை|டிவைட் பை|டிவைடு|டிவைடட்|டிவைடர்|டிவிடெட்|பை/gi, "/");
 
   // 6) Remove filler words like "equal to", "answer"
   exp = exp.replace(/\b(equal to|is equal to|answer|result|என்பது|சமம்|விடை)\b/gi, "");
@@ -147,7 +147,21 @@ startBtn.addEventListener("click", () => {
 
     try {
       const ans = eval(exp); // safe after validation
-      resultEl.textContent = `Result: ${ans}`;
+      let formattedAns;
+
+      if (ans % 1 !== 0) {
+        // check if it's a decimal number
+        const decimalPart = ans.toString().split(".")[1] || "";
+        if (decimalPart.length > 4) {
+          formattedAns = Number(ans).toFixed(4); // more than 4 → round to 4
+        } else {
+          formattedAns = ans.toString(); // less than or equal to 4 → keep original
+        }
+      } else {
+        formattedAns = ans.toString(); // whole number → keep original
+      }
+
+      resultEl.textContent = `Result: ${formattedAns}`;
 
       // speaking animation
       micIndicator.classList.remove("listening");
@@ -155,9 +169,10 @@ startBtn.addEventListener("click", () => {
 
       // Speak answer
       const synth = window.speechSynthesis;
-      const utter = new SpeechSynthesisUtterance(String(ans));
+      const utter = new SpeechSynthesisUtterance(String(formattedAns));
       const hasTamilChars = /[^\u0000-\u007f]/.test(voiceText);
       utter.lang = hasTamilChars ? "ta-IN" : "en-US";
+      // console.log(utter)
       synth.speak(utter);
 
       utter.onend = () => {
@@ -167,7 +182,7 @@ startBtn.addEventListener("click", () => {
       };
     } catch (err) {
       console.error("Error evaluating:", err);
-      resultEl.textContent = "⚠ Error in calculation";
+      resultEl.textContent = "Error in calculation";
     }
   };
 
