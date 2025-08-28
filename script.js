@@ -15,7 +15,7 @@ const numberMap = {
   "ஒன்று": "1", "ஒன்": "1", "one": "1",
   "இரண்டு": "2", "டூ": "2", "two": "2",
   "மூன்று": "3", "த்ரீ": "3", "three": "3",
-  "நான்கு": "4", "ஃபோர்": "4", "four": "4",
+  "நான்கு": "4","போர்":"4", "ஃபோர்": "4", "four": "4",
   "ஐந்து": "5", "ஃபைவ்": "5", "five": "5",
   "ஆறு": "6", "சிக்ஸ்": "6", "six": "6",
   "ஏழு": "7", "செவன்": "7", "seven": "7",
@@ -49,9 +49,13 @@ function convertToMathExpression(text) {
 
   // 2) replace mapped words from numberMap (word boundaries)
   for (const [word, digit] of Object.entries(numberMap)) {
-    const re = new RegExp("\\b" + escapeRegExp(word) + "\\b", "gi");
+    // For Tamil/Unicode words, avoid using \b because JS word-boundary fails
+    const re = /[^\u0000-\u007f]/.test(word)
+      ? new RegExp(escapeRegExp(word), "gi")
+      : new RegExp("\\b" + escapeRegExp(word) + "\\b", "gi");
     exp = exp.replace(re, digit);
   }
+
 
   // 3) operator words -> symbols (English)
   exp = exp
@@ -62,10 +66,12 @@ function convertToMathExpression(text) {
 
   // 4) operator words -> symbols (Tamil)
   exp = exp
-    .replace(/கூட்டு|கூட்டல்|சேர்த்து|பிளஸ்|ஆட்|சம்மேச்சு/gi, "+")
+    // .replace(/ஒன்ப்ளஸ்/gi, "1 +")
+    .replace(/கூட்டு|கூட்டல்|சேர்த்து|ப்ளஸ்|பிளஸ்|ஆட்|சம்மேச்சு/gi, "+")
     .replace(/கழி|கழித்தல்|மைனஸ்|குறைத்தல்|கம்மி|கழிச்சு/gi, "-")
-    .replace(/பெருக்கு|மடக்கு|இன்டு|மடங்காக|பெருக்கல்/gi, "*")
-    .replace(/வகுத்து|வகுத்தல்|வகுக்க|பகுத்தல்|டிவைடு|டிவைடட்/gi, "/");
+    .replace(/பெருக்கு|மடக்கு|இன்டு|மடங்காக|பெருக்கல்|டைம்ஸ்|மல்டிபிள்/gi, "*")
+    .replace(/வகுத்து|வகுத்தல்|வகுக்க|பகுத்தல்|டிவைடு|டிவைடட்|டிவைடர்|டிவைட்|பை/gi, "/");
+
 
   // 5) remove "answer/result" words and trailing "is equal to" phrases
   exp = exp.replace(/\b(equal to|is equal to|answer|result|என்பது|சமம்|விடை)\b/gi, "");
@@ -101,7 +107,7 @@ startBtn.addEventListener("click", () => {
   recognition.maxAlternatives = 1;
   recognition.start();
 
-  console.log("🎤 Listening...");
+  console.log("Listening...");
 
   // UI: listening state
   btnText.style.opacity = "0";
@@ -112,7 +118,7 @@ startBtn.addEventListener("click", () => {
   recognition.onresult = (event) => {
     let voiceText = event.results[0][0].transcript || "";
     voiceText = voiceText.trim();
-    console.log("🗣 Voice Input:", voiceText);
+    console.log("Voice Input:", voiceText);
 
     // remove common filler words early
     voiceText = voiceText.replace(/அப்புறம்|பிறகு|என்று|சொன்னேன்|then|after/gi, "").trim();
@@ -120,13 +126,14 @@ startBtn.addEventListener("click", () => {
     // convert to math expression
     let exp = convertToMathExpression(voiceText);
     console.log("🔁 Normalized expression:", exp);
+    console.log(exp)
     expressionEl.textContent = `Expression: ${exp || "(not recognized)"}`;
 
     // final validation: only digits, operators, dot, parens allowed
     const finalValid = /^[0-9+\-*/().]+$/;
     if (!exp || !finalValid.test(exp)) {
-      console.warn("⚠ Invalid string detected (after normalization).");
-      resultEl.textContent = "❌ Invalid Expression";
+      console.warn("Invalid string detected (after normalization).");
+      resultEl.textContent = "Invalid Expression";
       return;
     }
 
@@ -148,23 +155,23 @@ startBtn.addEventListener("click", () => {
       synth.speak(utter);
 
       utter.onend = () => {
-        console.log("✅ Finished speaking");
+        console.log("Finished speaking");
         micIndicator.classList.remove("speaking");
         micIndicator.classList.add("hidden");
       };
     } catch (err) {
-      console.error("💥 Error evaluating:", err);
+      console.error("Error evaluating:", err);
       resultEl.textContent = "⚠ Error in calculation";
     }
   };
 
   recognition.onerror = (ev) => {
     console.error("Speech recognition error:", ev.error);
-    resultEl.textContent = "⚠ Speech recognition error";
+    resultEl.textContent = "Speech recognition error";
   };
 
   recognition.onend = () => {
-    console.log("🛑 Stopped listening");
+    console.log("Stopped listening");
     // reset UI if not speaking
     btnText.style.opacity = "1";
     listeningText.style.opacity = "0";
